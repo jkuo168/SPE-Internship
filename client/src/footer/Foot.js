@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '0vh',
+    minHeight: '2vh',
     width: "100%"
   },
   footer: {
@@ -29,7 +29,7 @@ export default function Foot() {
         <Container>
           <Typography
           variant="h6"
-          style={{ textAlign:"left", color: '#ffff'}}
+          style={{color: '#ffff'}}
           >
             <strong>SPE Internship 2019</strong>
           </Typography>

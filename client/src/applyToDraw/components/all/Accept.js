@@ -29,7 +29,7 @@ const ColorButton = withStyles(theme => ({
   }
 }))(Button);
 
-const Netid = props => (
+const Names = props => (
   <List dense={true}>
     <ListItem>
       <ListItemText
@@ -52,31 +52,44 @@ class Accept extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      names: [],
+      netid: '',
       netids: [],
       group: '',
       checked: ''
     }
   }
 
- componentWillMount() {
-  axios.get(`http://localhost:4000/applications/${this.props.netid}`)
+async componentWillMount() {
+  await axios.get(`http://localhost:4000/applications/${this.props.netid}`)
       .then(response => {
         this.setState({
-          group: response.data.group[0]
+          group: response.data.group[0],
         })
-        axios.get(`http://localhost:4000/applications/group/netid/${this.state.group}/${this.props.netid}`)
-            .then(response => {
-              this.setState({
-                netids: response.data
+        axios.get(`http://localhost:4000/applications/group/all/${this.state.group}/${this.props.netid}`)
+          .then(response => {
+            this.setState({
+              netid: response.data
+            })
+            this.state.netid.map(netid => {
+              return this.setState({
+                netids: [...this.state.netids, netid.netid]
               })
             })
+          })
       })
-    this.listNetId();
+    axios.get(`http://localhost:4000/applications/group/netid/${this.state.group}/${this.props.netid}`)
+          .then((response) => {
+            this.setState({
+              names: response.data
+            })
+          })
+    this.listNames();
   }
 
-  listNetId () {
-    return this.state.netids.map((netid, i) => {
-      return <Netid first={netid.first} last={netid.last} key={i} />
+  listNames () {
+    return this.state.names.map((name, i) => {
+      return <Names first={name.first} last={name.last} key={i} />
    })
   }
 
@@ -103,36 +116,38 @@ class Accept extends Component {
     switch(this.state.checked) {
       case(true):
         return(
-          <Meal />
+          <Meal netid={this.props.netid} draw={this.props.draw} group={this.state.group} netids={this.state.netids}/>
         )
       case(false):
         switch(COLLEGE) {
           case 'Butler':
             return(
-              <Butler netid={this.props.netid} college={this.props.COLLEGE}/>
+              <Butler netid={this.props.netid} class={this.props.class} draw={this.props.draw} college={this.props.college} />
             )
           case 'Forbes':
             return(
-              <Forbes netid={this.props.netid} college={this.props.COLLEGE}/>
+              <Forbes netid={this.props.netid} class={this.props.class} draw={this.props.draw} college={this.props.college} />
             )
           case 'Mathey':
             return(
-              <Mathey netid={this.props.netid} college={this.props.COLLEGE}/>
+              <Mathey netid={this.props.netid} class={this.props.class} draw={this.props.draw} college={this.props.college} />
             )
           case 'Rockefeller':
             return(
-              <Rockefeller netid={this.props.netid} college={this.props.COLLEGE}/>
+              <Rockefeller netid={this.props.netid} class={this.props.class} draw={this.props.draw} college={this.props.college} />
             )
           case 'Whitman':
             return(
-              <Whitman netid={this.props.netid} college={this.props.COLLEGE}/>
+              <Whitman netid={this.props.netid} class={this.props.class} draw={this.props.draw} college={this.props.college} />
             )
           case 'Wilson':
             return(
-              <Wilson netid={this.props.netid} college={this.props.COLLEGE}/>
+              <Wilson netid={this.props.netid} class={this.props.class} draw={this.props.draw} college={this.props.college} />
             )
+
           default: console.log(COLLEGE);
         }
+      break;
       default:
         return(
           <MuiThemeProvider>
@@ -143,7 +158,7 @@ class Accept extends Component {
               <Typography variant="h6">
               You have been added to a group with <br/>
               </Typography>
-              {this.listNetId()}
+              {this.listNames()}
               <Typography variant="h6">
               Would you like to accept or decline joining this group?
               </Typography>

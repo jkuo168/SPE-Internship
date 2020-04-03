@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Accept from '../all/Accept';
 import Size from '../all/Size';
+import Applied from '../all/Applied';
 import '../Form.css';
 import { withStyles } from '@material-ui/core/styles';
 import { orange } from '@material-ui/core/colors';
@@ -37,7 +38,11 @@ class Whitman extends Component {
     this.state = {
       draw:'',
       draws: [],
-      find: ''
+      groups: [], // user's groups
+      group: '',
+      find: '',
+      length:'',
+      netids: []
     }
   }
 
@@ -51,30 +56,63 @@ class Whitman extends Component {
     await axios.get(`http://localhost:4000/applications/${this.props.netid}`)
       .then(response => {
         this.setState({
-          draws: response.data.draw
+          draws: response.data.draw,
+          groups: response.data.group
         })
       })
       .catch((error) => {
         console.log(error)
       })
+    // if draw is selected, check if they already completed application
     if (this.state.draw !== '') {
       this.setState({
         find: this.state.draws.includes(this.state.draw)
       })
+
+      // if they did not apply
+      if (!this.state.find) {
+        // check if the length of the draw is the same as the group
+        this.setState({
+          length: this.state.draws.length === this.state.groups.length
+        })
+
+        // if the lengths are not the same means they were added to group
+        if (!this.state.length) {
+          // find draw that associates with groupid
+          this.state.groups.map(group => {
+            // finds one user with that id and checks if their college matches user's college
+            return axios.get(`http://localhost:4000/applications/group/${group}/${this.props.netid}`)
+              .then(response => {
+                  this.setState({
+                    group: response.data.group // id associated with that college gets sent as props to accepted page
+                  })
+              })
+           })
+        }
+      }
     }
   }
 
   render() {
     const CLASS = this.props.class
+    const COLLEGE = this.props.college
       switch(this.state.find) {
         case true:
           return (
-            <Accept />
+            <Applied college={COLLEGE}/>
           )
         case false:
-          return (
-            <Size class={CLASS}/>
-          )
+          switch(this.state.length) {
+            case false:
+              return (
+                <Accept class={CLASS} netid={this.props.netid} draw={this.state.draw} college={COLLEGE} group={this.state.group}/>
+              )
+            case true:
+              return (
+                <Size class={CLASS} draw={this.state.draw} college={COLLEGE} netid={this.props.netid}/>
+            )
+            default: console.log('')
+          }
         default:
         return (
           <MuiThemeProvider>
@@ -107,7 +145,6 @@ class Whitman extends Component {
           </MuiThemeProvider>
         )
       }
-
   }
 }
 

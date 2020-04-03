@@ -76,7 +76,12 @@ class Meal extends Component {
     switch(this.state.clicked) {
       case true:
         return (
-          <Summary meal={this.state.meal}/>
+          <Summary
+          meal={this.state.meal}
+          netids={this.props.netids}
+          netid={this.props.netid}
+          group={this.props.group}
+          draw={this.props.draw}/>
         )
       default:
         return (
@@ -94,8 +99,7 @@ class Meal extends Component {
                   value={this.state.meal}
                   onChange={this.handleChange('meal')}
                 >
-                  <FormControlLabel value="Independent" control={<OrangeRadio />} label="Independent" />
-                  <FormControlLabel value="Meal Plan" control={<OrangeRadio />} label="Meal Plan / Eating Club" />
+                  <FormControlLabel value="Unlimited Meal Plan" control={<OrangeRadio />} label="Unlimited Meal Plan" />
                 </RadioGroup>
               </FormControl>
               <br/><br/><br/>

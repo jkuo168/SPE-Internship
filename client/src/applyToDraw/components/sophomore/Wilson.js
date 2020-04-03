@@ -105,11 +105,11 @@ class Wilson extends Component {
           switch(this.state.length) {
             case false:
               return (
-                <Accept netid={this.props.netid} college={COLLEGE} group={this.state.group}/>
+                <Accept class={CLASS} netid={this.props.netid} draw={this.state.draw} college={COLLEGE} group={this.state.group}/>
               )
             case true:
               return (
-                <Size class={CLASS} college={COLLEGE} netid={this.props.netid}/>
+                <Size class={CLASS} draw={this.state.draw} college={COLLEGE} netid={this.props.netid}/>
             )
             default: console.log('')
           }
@@ -145,7 +145,6 @@ class Wilson extends Component {
           </MuiThemeProvider>
         )
       }
-
   }
 }
 

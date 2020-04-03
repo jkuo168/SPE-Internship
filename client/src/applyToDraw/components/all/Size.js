@@ -55,11 +55,11 @@ class Size extends Component {
     const CLASS = this.props.class
     const COLLEGE = this.props.college
     switch(this.state.checked) {
-      case 'individual':
+      case 'Individual':
         switch(CLASS) {
           case 22:
             return (
-              <Meal />
+              <Meal group={this.state.group} draw={this.props.draw} netid={this.props.netid}/>
             )
           case 21 || 20:
             return (
@@ -67,41 +67,49 @@ class Size extends Component {
             )
           default: console.log('')
         }
-        case 'group':
+        break;
+        case 'Group':
           return (
-            <Group class={CLASS} college={COLLEGE} netid={this.props.netid}/>
+            <Group
+            class={CLASS}
+            college={COLLEGE}
+            netid={this.props.netid}
+            draw={this.props.draw}
+            group={this.state.group}
+            />
           )
-    }
-    return(
-      <MuiThemeProvider>
-        <React.Fragment>
-          <PrincetonLogo />
-          <SpecialDrawer />
-          <br/><br/>
-          <Typography variant="h6">
-            <i>Select a Draw Group Size</i>
-          </Typography>
-          <br/>
-          <FormControl component="fieldset">
-            <RadioGroup
-              value={this.state.group}
-              onChange={this.handleChange('group')}
+    default:
+      return(
+        <MuiThemeProvider>
+          <React.Fragment>
+            <PrincetonLogo />
+            <SpecialDrawer />
+            <br/><br/>
+            <Typography variant="h6">
+              <i>Select a Draw Group Size</i>
+            </Typography>
+            <br/>
+            <FormControl component="fieldset">
+              <RadioGroup
+                value={this.state.group}
+                onChange={this.handleChange('group')}
+              >
+                <FormControlLabel value="Individual" control={<OrangeRadio />} label="Individual" />
+                <FormControlLabel value="Group" control={<OrangeRadio />} label="Group" />
+              </RadioGroup>
+            </FormControl>
+            <br/><br/><br/>
+            <ColorButton
+                variant="contained"
+                color="primary"
+                onClick={this.handleOnClickContinue}
             >
-              <FormControlLabel value="individual" control={<OrangeRadio />} label="Individual" />
-              <FormControlLabel value="group" control={<OrangeRadio />} label="Group" />
-            </RadioGroup>
-          </FormControl>
-          <br/><br/><br/>
-          <ColorButton
-              variant="contained"
-              color="primary"
-              onClick={this.handleOnClickContinue}
-          >
-          Continue
-          </ColorButton>
-        </React.Fragment>
-      </MuiThemeProvider>
-    )
+            Continue
+            </ColorButton>
+          </React.Fragment>
+        </MuiThemeProvider>
+      )
+    }
   }
 }
 

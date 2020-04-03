@@ -27,9 +27,9 @@ const ApplicationSchema = new Schema({
     type: String
   },
   time: {
-    type: String
+    type: Array
   }
 });
 
-const Application = mongoose.model('Application', ApplicationSchema, 'post');
+const Application = mongoose.model('Application', ApplicationSchema, 'posts');
 module.exports = Application;

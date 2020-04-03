@@ -13,7 +13,6 @@ import Rockefeller from './sophomore/Rockefeller';
 import Whitman from './sophomore/Whitman';
 import Wilson from './sophomore/Wilson';
 import Alldraw from './junior_senior/Alldraw';
-import HomePage from '../../landingPage/components/HomePage';
 import './Form.css';
 import { withStyles, makeStyles} from '@material-ui/core/styles';
 import { orange } from '@material-ui/core/colors';
@@ -62,10 +61,11 @@ class Login extends Component {
   };
 
   // Handle onClick
-  handleOnClick = async (e) => {
+  handleOnClick = (e) => {
     e.preventDefault();
 
-    await axios.get(`http://localhost:4000/applications/${this.state.netid}`)
+    if (this.state.netid !== '' && this.state.password !== '') {
+    axios.get(`http://localhost:4000/applications/${this.state.netid}`)
       .then(response => {
         this.setState({
           NET_ID: response.data.netid,
@@ -76,6 +76,7 @@ class Login extends Component {
       .catch((error) => {
         console.log(error)
       })
+    }
 
     this.setState({
       netError:"",
@@ -140,7 +141,7 @@ class Login extends Component {
             );
           default:
             return(
-              <HomePage />
+             console.log('')
             )
         }
 
